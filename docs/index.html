@@ -190,46 +190,49 @@
     }
   
     function subirFoto(event) {
-      const file = event.target.files[0];
-      if (!file || !gatoActual) return;
-  
-      const reader = new FileReader();
-  
-      reader.onload = function(e) {
-        base64Temporal = e.target.result;
-        console.log("Imagen cargada:", base64Temporal);
-        modalImagen.src = base64Temporal;
-        document.getElementById('confirmarFotoBtn').style.display = 'inline-block';
-      };
-  
-      reader.onerror = function() {
-        alert("Error al leer la imagen, intentá nuevamente.");
-      };
-  
-      reader.readAsDataURL(file);
+  const file = event.target.files[0];
+  if (!file || !gatoActual) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    base64Temporal = e.target.result;
+    console.log('Base64 cargado:', base64Temporal.slice(0,50));  // ver un fragmento
+    modalImagen.src = base64Temporal;
+    confirmarFotoBtn.style.display = 'inline-block';
+  };
+
+  reader.onerror = function() {
+    alert("Error al leer la imagen, intentá nuevamente.");
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function confirmarFoto() {
+  if (!gatoActual || !base64Temporal) {
+    alert('No hay imagen para confirmar.');
+    return;
+  }
+
+  console.log('Guardando imagen en localStorage...');
+  localStorage.setItem(`foto-${gatoActual.nombre}`, base64Temporal);
+  modalImagen.src = base64Temporal;
+
+  // Actualiza la imagen en la tarjeta correspondiente
+  const tarjetas = document.querySelectorAll('.gato');
+  tarjetas.forEach(t => {
+    if (t.querySelector('h3').textContent === gatoActual.nombre) {
+      t.querySelector('img').src = base64Temporal;
     }
-  
-    function confirmarFoto() {
-      if (!gatoActual || !base64Temporal) return;
-  
-      console.log("Confirmando foto para:", gatoActual.nombre);
-      console.log("Base64 temporal:", base64Temporal);
-  
-      localStorage.setItem(`foto-${gatoActual.nombre}`, base64Temporal);
-  
-      modalImagen.src = base64Temporal;
-  
-      const tarjetas = document.querySelectorAll('.gato');
-      tarjetas.forEach(t => {
-        if (t.querySelector('h3').textContent === gatoActual.nombre) {
-          const img = t.querySelector('img');
-          img.src = base64Temporal;
-        }
-      });
-  
-      document.getElementById('confirmarFotoBtn').style.display = 'none';
-      base64Temporal = null;
-    }
+  });
+
+  confirmarFotoBtn.style.display = 'none';
+  base64Temporal = null;
+  document.querySelector('input[type="file"]').value = '';
+}
+
+
   
     function borrarFoto() {
       if (!gatoActual) return;
