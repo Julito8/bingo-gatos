@@ -291,7 +291,7 @@
     const gato = gatos.find(g => g.nombre === nombre);
     if (gato) {
       const img = t.querySelector('img');
-      img.src = gato.base; // Fuerza que se vuelva a usar la foto base
+      img.src = baseComun; // Fuerza que se vuelva a usar la foto base
     }
   });
 
