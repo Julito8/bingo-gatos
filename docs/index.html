@@ -128,6 +128,8 @@
 </head>
 <body>
   <h1>¡Bienvenida al Bingo Gatuno! 🐾</h1>
+  <button onclick="borrarTodasLasFotos()">🧹 Borrar todo el progreso</button>
+
   <div class="tablero" id="tablero"></div>
 
   <div class="modal" id="modal">
@@ -150,6 +152,9 @@
       <!-- Confirmar y borrar -->
       <button id="confirmarFotoBtn" onclick="confirmarFoto()" style="display: none;">✅ Confirmar foto</button>
       <button onclick="borrarFoto()">🗑️ Borrar foto</button>
+
+      <button onclick="cerrarModal()">⬅️ Atrás</button>
+
 
     </div>
   </div>
@@ -271,6 +276,26 @@
       base64Temporal = null;
       document.getElementById('confirmarFotoBtn').style.display = 'none';
     }
+
+    function borrarTodasLasFotos() {
+  if (!confirm("¿Estás segura de que querés borrar todas las fotos? Esta acción no se puede deshacer.")) return;
+
+  gatos.forEach(gato => {
+    localStorage.removeItem(`foto-${gato.nombre}`);
+  });
+
+  const tarjetas = document.querySelectorAll('.gato');
+  tarjetas.forEach(t => {
+    const nombre = t.querySelector('h3').textContent;
+    const gato = gatos.find(g => g.nombre === nombre);
+    if (gato) {
+      t.querySelector('img').src = gato.base;
+    }
+  });
+
+  alert("Todas las fotos fueron borradas. ¡Empezás de nuevo!");
+}
+
   </script>
 </body>
 </html>
