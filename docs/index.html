@@ -92,6 +92,7 @@
       box-sizing: border-box;
     }
 
+  
     button {
       background: #ad1457;
       color: white;
@@ -137,7 +138,7 @@
       { nombre: 'Mushka', pelo: 'Gris blanca y rosita', ubicacion: 'Abajo de colchas', rareza: 'Muy raro', caracteristicas: 'Osito asesino, super peluda y amasable pero mala', base: 'mushka.png' },
       { nombre: 'Murci', pelo: 'Negra con marrón', ubicacion: 'En las alturas o escalera', rareza: 'Muy raro', caracteristicas: 'Flaca ágil, siempre huyendo o escondiéndose', base: 'murci.png' }
     ];
-
+  
     const tablero = document.getElementById('tablero');
     const modal = document.getElementById('modal');
     const modalNombre = document.getElementById('modal-nombre');
@@ -146,15 +147,16 @@
     const modalUbicacion = document.getElementById('modal-ubicacion');
     const modalRareza = document.getElementById('modal-rareza');
     const modalCaracteristicas = document.getElementById('modal-caracteristicas');
-
+  
     let gatoActual = null;
-
+    let base64Temporal = null;
+  
     gatos.forEach(gato => {
       const div = document.createElement('div');
       div.className = 'gato';
       div.onclick = () => abrirModal(gato);
       const img = document.createElement('img');
-
+  
       const imagenGuardada = localStorage.getItem(`foto-${gato.nombre}`);
       img.src = imagenGuardada || gato.base;
       img.alt = gato.nombre;
@@ -164,7 +166,7 @@
       div.appendChild(h3);
       tablero.appendChild(div);
     });
-
+  
     function abrirModal(gato) {
       gatoActual = gato;
       modalNombre.textContent = gato.nombre;
@@ -172,50 +174,75 @@
       modalUbicacion.textContent = gato.ubicacion;
       modalRareza.textContent = gato.rareza;
       modalCaracteristicas.textContent = gato.caracteristicas;
-
+  
       const imagenGuardada = localStorage.getItem(`foto-${gato.nombre}`);
       modalImagen.src = imagenGuardada || gato.base;
-
+  
+      document.getElementById('confirmarFotoBtn').style.display = 'none';
       modal.style.display = 'flex';
     }
-
+  
     function cerrarModal() {
       modal.style.display = 'none';
+      base64Temporal = null;
+      document.getElementById('confirmarFotoBtn').style.display = 'none';
     }
-
+  
     function subirFoto(event) {
       const file = event.target.files[0];
       if (!file || !gatoActual) return;
-
+  
       const reader = new FileReader();
+  
       reader.onload = function(e) {
-        const base64 = e.target.result;
-        localStorage.setItem(`foto-${gatoActual.nombre}`, base64);
-        modalImagen.src = base64;
-
-        const tarjetas = document.querySelectorAll('.gato');
-        tarjetas.forEach(t => {
-          if (t.querySelector('h3').textContent === gatoActual.nombre) {
-            t.querySelector('img').src = base64;
-          }
-        });
+        base64Temporal = e.target.result;
+        modalImagen.src = base64Temporal;
+        document.getElementById('confirmarFotoBtn').style.display = 'inline-block';
       };
+  
+      reader.onerror = function() {
+        alert("Error al leer la imagen, intentá nuevamente.");
+      };
+  
       reader.readAsDataURL(file);
     }
-
+  
+    function confirmarFoto() {
+      if (!gatoActual || !base64Temporal) return;
+  
+      localStorage.setItem(`foto-${gatoActual.nombre}`, base64Temporal);
+  
+      modalImagen.src = base64Temporal + '?' + new Date().getTime();
+  
+      const tarjetas = document.querySelectorAll('.gato');
+      tarjetas.forEach(t => {
+        if (t.querySelector('h3').textContent === gatoActual.nombre) {
+          const img = t.querySelector('img');
+          img.src = base64Temporal + '?' + new Date().getTime();
+        }
+      });
+  
+      document.getElementById('confirmarFotoBtn').style.display = 'none';
+      base64Temporal = null;
+    }
+  
     function borrarFoto() {
       if (!gatoActual) return;
       localStorage.removeItem(`foto-${gatoActual.nombre}`);
       modalImagen.src = gatoActual.base;
-
+  
       const tarjetas = document.querySelectorAll('.gato');
       tarjetas.forEach(t => {
         if (t.querySelector('h3').textContent === gatoActual.nombre) {
           t.querySelector('img').src = gatoActual.base;
         }
       });
+  
+      document.getElementById('confirmarFotoBtn').style.display = 'none';
+      base64Temporal = null;
     }
   </script>
+  
 </body>
 </html>
 
