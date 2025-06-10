@@ -247,23 +247,26 @@
     }
   
     function confirmarFoto() {
-      if (!gatoActual || !base64Temporal) return;
-  
-      localStorage.setItem(`foto-${gatoActual.nombre}`, base64Temporal);
-  
-      modalImagen.src = base64Temporal;
-  
-      const tarjetas = document.querySelectorAll('.gato');
-      tarjetas.forEach(t => {
-        if (t.querySelector('h3').textContent === gatoActual.nombre) {
-          const img = t.querySelector('img');
-          img.src = base64Temporal;
-        }
-      });
-  
-      document.getElementById('confirmarFotoBtn').style.display = 'none';
-      base64Temporal = null;
+  if (!gatoActual || !base64Temporal) return;
+
+  localStorage.setItem(`foto-${gatoActual.nombre}`, base64Temporal);
+
+  modalImagen.src = base64Temporal;
+
+  const tarjetas = document.querySelectorAll('.gato');
+  tarjetas.forEach(t => {
+    if (t.querySelector('h3').textContent === gatoActual.nombre) {
+      const img = t.querySelector('img');
+      img.src = base64Temporal;
     }
+  });
+
+  document.getElementById('confirmarFotoBtn').style.display = 'none';
+  base64Temporal = null;
+
+  cerrarModal(); // Cierra el modal y vuelve al tablero
+}
+
   
     function borrarFoto() {
       if (!gatoActual) return;
