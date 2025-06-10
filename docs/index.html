@@ -264,7 +264,13 @@
   document.getElementById('confirmarFotoBtn').style.display = 'none';
   base64Temporal = null;
 
-  cerrarModal(); // Cierra el modal y vuelve al tablero
+  // Cerramos el modal con un delay pequeño
+  setTimeout(() => {
+    cerrarModal();
+  }, 100); // 100 ms
+
+  // Opcional: poner foco en el tablero para evitar problemas visuales
+  tablero.focus?.();
 }
 
   
