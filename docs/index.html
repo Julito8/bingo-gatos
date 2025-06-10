@@ -107,6 +107,21 @@
         width: 90%;
       }
     }
+
+    label {
+  background: #ad1457;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  margin: 12px 0;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
   </style>
 </head>
 <body>
@@ -123,9 +138,15 @@
       <p><strong>Rareza:</strong> <span id="modal-rareza"></span></p>
       <p><strong>Características:</strong> <span id="modal-caracteristicas"></span></p>
       <!-- input con capture para abrir cámara -->
-      <input type="file" accept="image/*" capture="environment" onchange="subirFoto(event)">
+      <label for="camara">📸 Sacar foto</label>
+      <input id="camara" type="file" accept="image/*" capture="environment" style="display: none" onchange="subirFoto(event)">
+      
+      <label for="galeria">🖼️ Elegir de galería</label>
+      <input id="galeria" type="file" accept="image/*" style="display: none" onchange="subirFoto(event)">
+      
       <button id="confirmarFotoBtn" onclick="confirmarFoto()" style="display: none;">Confirmar foto</button>
-      <button onclick="borrarFoto()">Borrar foto</button>      
+      <button onclick="borrarFoto()">Borrar foto</button>
+         
     </div>
   </div>
 
