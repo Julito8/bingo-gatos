@@ -12,7 +12,6 @@
       margin: 0;
       padding: 0 10px;
     }
-
     h1 {
       color: #ad1457;
       margin-top: 20px;
@@ -33,12 +32,10 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       width: 180px;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.3s ease;
     }
-
     .gato:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     }
 
     .gato img {
@@ -46,31 +43,28 @@
       height: 150px;
       object-fit: cover;
       border-radius: 8px;
+      transition: box-shadow 0.3s ease;
+    }
+    .gato:hover img {
+      box-shadow: 0 0 15px 5px #ad1457aa;
     }
 
     /* Modal */
     .modal {
-      display: flex;
-      opacity: 0;
-      transform: scale(0.95);
+      display: none;
       position: fixed;
       z-index: 10;
-      left: 0;
-      top: 0;
+      left: 0; top: 0;
       width: 100vw;
       height: 100vh;
       background-color: rgba(0,0,0,0.5);
       justify-content: center;
       align-items: center;
       padding: 10px;
-      pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      animation: fadeIn 0.3s ease forwards;
     }
-
-    .modal.mostrar {
-      opacity: 1;
-      transform: scale(1);
-      pointer-events: auto;
+    .modal.show {
+      display: flex;
     }
 
     .modal-content {
@@ -84,6 +78,7 @@
       text-align: left;
       box-sizing: border-box;
       position: relative;
+      animation: slideIn 0.3s ease forwards;
     }
 
     .modal-content img {
@@ -101,6 +96,7 @@
       font-size: 24px;
       font-weight: bold;
       cursor: pointer;
+      user-select: none;
     }
 
     input[type="file"], button {
@@ -108,6 +104,7 @@
       margin: 12px 0;
       width: 100%;
       box-sizing: border-box;
+      font-size: 1rem;
     }
 
     button {
@@ -117,12 +114,25 @@
       padding: 10px;
       border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #7b0a38;
     }
 
     @media (max-width: 500px) {
       .gato {
         width: 90%;
       }
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    @keyframes slideIn {
+      from {transform: translateY(50px); opacity: 0;}
+      to {transform: translateY(0); opacity: 1;}
     }
   </style>
 </head>
@@ -139,9 +149,17 @@
       <p><strong>Ubicación:</strong> <span id="modal-ubicacion"></span></p>
       <p><strong>Rareza:</strong> <span id="modal-rareza"></span></p>
       <p><strong>Características:</strong> <span id="modal-caracteristicas"></span></p>
-      <input type="file" id="fotoInput" accept="image/*" capture="environment" onchange="subirFoto(event)">
-      <button id="confirmarFotoBtn" onclick="confirmarFoto()" style="display: none;">Confirmar foto</button>
-      <button onclick="borrarFoto()">Borrar foto</button>
+
+      <!-- Dos inputs para fotos (cámara y galería) ocultos -->
+      <input type="file" id="fotoCamara" accept="image/*" capture="environment" onchange="subirFoto(event)" style="display:none;">
+      <input type="file" id="fotoGaleria" accept="image/*" onchange="subirFoto(event)" style="display:none;">
+
+      <!-- Botones para activar cada input -->
+      <button onclick="document.getElementById('fotoCamara').click()">📷 Sacar foto</button>
+      <button onclick="document.getElementById('fotoGaleria').click()">🖼️ Subir desde galería</button>
+
+      <button id="confirmarFotoBtn" onclick="confirmarFoto()" style="display: none;">✅ Confirmar foto</button>
+      <button onclick="borrarFoto()">🗑️ Borrar foto</button>      
     </div>
   </div>
 
@@ -156,7 +174,7 @@
       { nombre: 'Mushka', pelo: 'Gris blanca y rosita', ubicacion: 'Abajo de colchas', rareza: 'Muy raro', caracteristicas: 'Osito asesino, super peluda y amasable pero mala', base: 'mushka.png' },
       { nombre: 'Murci', pelo: 'Negra con marrón', ubicacion: 'En las alturas o escalera', rareza: 'Muy raro', caracteristicas: 'Flaca ágil, siempre huyendo o escondiéndose', base: 'murci.png' }
     ];
-
+  
     const tablero = document.getElementById('tablero');
     const modal = document.getElementById('modal');
     const modalNombre = document.getElementById('modal-nombre');
@@ -165,16 +183,16 @@
     const modalUbicacion = document.getElementById('modal-ubicacion');
     const modalRareza = document.getElementById('modal-rareza');
     const modalCaracteristicas = document.getElementById('modal-caracteristicas');
-
+  
     let gatoActual = null;
     let base64Temporal = null;
-
+  
     gatos.forEach(gato => {
       const div = document.createElement('div');
       div.className = 'gato';
       div.onclick = () => abrirModal(gato);
       const img = document.createElement('img');
-
+  
       const imagenGuardada = localStorage.getItem(`foto-${gato.nombre}`);
       img.src = imagenGuardada || gato.base;
       img.alt = gato.nombre;
@@ -184,7 +202,7 @@
       div.appendChild(h3);
       tablero.appendChild(div);
     });
-
+  
     function abrirModal(gato) {
       gatoActual = gato;
       modalNombre.textContent = gato.nombre;
@@ -192,74 +210,75 @@
       modalUbicacion.textContent = gato.ubicacion;
       modalRareza.textContent = gato.rareza;
       modalCaracteristicas.textContent = gato.caracteristicas;
-
+  
       const imagenGuardada = localStorage.getItem(`foto-${gato.nombre}`);
       modalImagen.src = imagenGuardada || gato.base;
-
+  
       document.getElementById('confirmarFotoBtn').style.display = 'none';
-      modal.classList.add('mostrar');
+      modal.classList.add('show');
     }
-
+  
     function cerrarModal() {
-      modal.classList.remove('mostrar');
-      setTimeout(() => {
-        base64Temporal = null;
-        document.getElementById('confirmarFotoBtn').style.display = 'none';
-      }, 300);
+      modal.classList.remove('show');
+      base64Temporal = null;
+      document.getElementById('confirmarFotoBtn').style.display = 'none';
+      // Limpio inputs file para que permitan seleccionar la misma foto varias veces
+      document.getElementById('fotoCamara').value = '';
+      document.getElementById('fotoGaleria').value = '';
     }
-
+  
     function subirFoto(event) {
       const file = event.target.files[0];
       if (!file || !gatoActual) return;
-
+  
       const reader = new FileReader();
-
+  
       reader.onload = function(e) {
         base64Temporal = e.target.result;
         modalImagen.src = base64Temporal;
         document.getElementById('confirmarFotoBtn').style.display = 'inline-block';
       };
-
+  
       reader.onerror = function() {
         alert("Error al leer la imagen, intentá nuevamente.");
       };
-
+  
       reader.readAsDataURL(file);
     }
-
+  
     function confirmarFoto() {
       if (!gatoActual || !base64Temporal) return;
-
+  
       localStorage.setItem(`foto-${gatoActual.nombre}`, base64Temporal);
+  
       modalImagen.src = base64Temporal;
-
+  
       const tarjetas = document.querySelectorAll('.gato');
       tarjetas.forEach(t => {
         if (t.querySelector('h3').textContent === gatoActual.nombre) {
-          t.querySelector('img').src = base64Temporal;
+          const img = t.querySelector('img');
+          img.src = base64Temporal;
         }
       });
-
-      base64Temporal = null;
+  
       document.getElementById('confirmarFotoBtn').style.display = 'none';
+      base64Temporal = null;
       cerrarModal();
     }
-
+  
     function borrarFoto() {
       if (!gatoActual) return;
       localStorage.removeItem(`foto-${gatoActual.nombre}`);
       modalImagen.src = gatoActual.base;
-
+  
       const tarjetas = document.querySelectorAll('.gato');
       tarjetas.forEach(t => {
         if (t.querySelector('h3').textContent === gatoActual.nombre) {
           t.querySelector('img').src = gatoActual.base;
         }
       });
-
-      base64Temporal = null;
+  
       document.getElementById('confirmarFotoBtn').style.display = 'none';
+      base64Temporal = null;
     }
-  </script>
-</body>
-</html>
+ 
