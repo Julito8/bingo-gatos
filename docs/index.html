@@ -123,7 +123,8 @@
       <p><strong>Rareza:</strong> <span id="modal-rareza"></span></p>
       <p><strong>Características:</strong> <span id="modal-caracteristicas"></span></p>
       <input type="file" accept="image/*" onchange="subirFoto(event)">
-      <button onclick="borrarFoto()">Borrar foto</button>
+      <button id="confirmarFotoBtn" onclick="confirmarFoto()" style="display: none;">Confirmar foto</button>
+      <button onclick="borrarFoto()">Borrar foto</button>      
     </div>
   </div>
 
