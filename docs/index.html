@@ -127,7 +127,7 @@
   </style>
 </head>
 <body>
-  <h1>¡Bienvenide al Bingo Gatuno! 🐾</h1>
+  <h1>¡Bienvenida al Bingo Gatuno! 🐾</h1>
   <div class="tablero" id="tablero"></div>
 
   <div class="modal" id="modal">
@@ -155,15 +155,17 @@
   </div>
 
   <script>
+    const baseComun = 'gato?.jpeg';
+
     const gatos = [
-      { nombre: 'Nilo', pelo: 'Atigrado beige', ubicacion: 'Patio o cocina', rareza: 'Raro', caracteristicas: 'Ojos verdes y parece un mini tigre', base: 'gato?.jpeg' },
-      { nombre: 'Cleo', pelo: 'Atigrada marrón desteñido', ubicacion: 'Piezas, abrigos', rareza: 'Común', caracteristicas: 'Gorda con cabeza chiquita y nariz perfecta', base: 'gato?.jpeg' },
-      { nombre: 'Timoteo', pelo: 'Blanco con manchas negras', ubicacion: 'Living', rareza: 'Común', caracteristicas: 'Bestia blanca super peluda', base: 'gato?.jpeg' },
-      { nombre: 'Pascal', pelo: 'Gris', ubicacion: 'Cocina', rareza: 'Raro', caracteristicas: 'Ojos Hazel y super maleable', base: 'gato?.jpeg' },
-      { nombre: 'Pelusa', pelo: 'Gris con mancha blanca en el pecho', ubicacion: 'Cocina', rareza: 'Común', caracteristicas: 'Vieja súper esqueletica con un poco de demencia y mucha hambre', base: 'gato?.jpeg' },
-      { nombre: 'Vicente', pelo: 'Atigrado gris clarito', ubicacion: 'Piezas o cocina', rareza: 'Raro', caracteristicas: 'Cagón que grita mucho pero super mimoso', base: 'gato?.jpeg' },
-      { nombre: 'Mushka', pelo: 'Gris blanca y rosita', ubicacion: 'Abajo de colchas', rareza: 'Muy raro', caracteristicas: 'Osito asesino, super peluda y amasable pero mala', base: 'gato?.jpeg' },
-      { nombre: 'Murci', pelo: 'Negra con marrón', ubicacion: 'En las alturas o escalera', rareza: 'Muy raro', caracteristicas: 'Flaca ágil, siempre huyendo o escondiéndose', base: 'gato?.jpeg' }
+      { nombre: 'Nilo', pelo: 'Atigrado beige', ubicacion: 'Patio o cocina', rareza: 'Raro', caracteristicas: 'Ojos verdes y parece un mini tigre'},
+      { nombre: 'Cleo', pelo: 'Atigrada marrón desteñido', ubicacion: 'Piezas, abrigos', rareza: 'Común', caracteristicas: 'Gorda con cabeza chiquita y nariz perfecta'},
+      { nombre: 'Timoteo', pelo: 'Blanco con manchas negras', ubicacion: 'Living', rareza: 'Común', caracteristicas: 'Bestia blanca super peluda'},
+      { nombre: 'Pascal', pelo: 'Gris', ubicacion: 'Cocina', rareza: 'Raro', caracteristicas: 'Ojos Hazel y super maleable'},
+      { nombre: 'Pelusa', pelo: 'Gris con mancha blanca en el pecho', ubicacion: 'Cocina', rareza: 'Común', caracteristicas: 'Vieja súper esqueletica con un poco de demencia y mucha hambre'},
+      { nombre: 'Vicente', pelo: 'Atigrado gris clarito', ubicacion: 'Piezas o cocina', rareza: 'Raro', caracteristicas: 'Cagón que grita mucho pero super mimoso'},
+      { nombre: 'Mushka', pelo: 'Gris blanca y rosita', ubicacion: 'Abajo de colchas', rareza: 'Muy raro', caracteristicas: 'Osito asesino, super peluda y amasable pero mala'},
+      { nombre: 'Murci', pelo: 'Negra con marrón', ubicacion: 'En las alturas o escalera', rareza: 'Muy raro', caracteristicas: 'Flaca ágil, siempre huyendo o escondiéndose'}
     ];
 
     const tablero = document.getElementById('tablero');
@@ -185,7 +187,7 @@
       const img = document.createElement('img');
 
       const imagenGuardada = localStorage.getItem(`foto-${gato.nombre}`);
-      img.src = imagenGuardada || gato.base;
+      img.src = imagenGuardada || baseComun;
       img.alt = gato.nombre;
       div.appendChild(img);
       const h3 = document.createElement('h3');
@@ -203,7 +205,7 @@
       modalCaracteristicas.textContent = gato.caracteristicas;
 
       const imagenGuardada = localStorage.getItem(`foto-${gato.nombre}`);
-      modalImagen.src = imagenGuardada || gato.base;
+      modalImagen.src = imagenGuardada || baseComun;
 
       document.getElementById('confirmarFotoBtn').style.display = 'none';
       modal.classList.add('mostrar');
@@ -257,12 +259,12 @@
     function borrarFoto() {
       if (!gatoActual) return;
       localStorage.removeItem(`foto-${gatoActual.nombre}`);
-      modalImagen.src = gatoActual.base;
+      modalImagen.src = baseComun;
 
       const tarjetas = document.querySelectorAll('.gato');
       tarjetas.forEach(t => {
         if (t.querySelector('h3').textContent === gatoActual.nombre) {
-          t.querySelector('img').src = gatoActual.base;
+          t.querySelector('img').src = baseComun;
         }
       });
 
