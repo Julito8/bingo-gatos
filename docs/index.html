@@ -213,13 +213,13 @@
   
       localStorage.setItem(`foto-${gatoActual.nombre}`, base64Temporal);
   
-      modalImagen.src = base64Temporal + '?' + new Date().getTime();
+      modalImagen.src = base64Temporal;
   
       const tarjetas = document.querySelectorAll('.gato');
       tarjetas.forEach(t => {
         if (t.querySelector('h3').textContent === gatoActual.nombre) {
           const img = t.querySelector('img');
-          img.src = base64Temporal + '?' + new Date().getTime();
+          img.src = base64Temporal;
         }
       });
   
