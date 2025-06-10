@@ -284,17 +284,25 @@
     localStorage.removeItem(`foto-${gato.nombre}`);
   });
 
+  // Refrescar las imágenes de las tarjetas del tablero
   const tarjetas = document.querySelectorAll('.gato');
   tarjetas.forEach(t => {
     const nombre = t.querySelector('h3').textContent;
     const gato = gatos.find(g => g.nombre === nombre);
     if (gato) {
-      t.querySelector('img').src = gato.base;
+      const img = t.querySelector('img');
+      img.src = gato.base; // Fuerza que se vuelva a usar la foto base
     }
   });
 
+  // También actualiza la imagen del modal si está abierto
+  if (gatoActual) {
+    modalImagen.src = gatoActual.base;
+  }
+
   alert("Todas las fotos fueron borradas. ¡Empezás de nuevo!");
 }
+
 
   </script>
 </body>
