@@ -128,7 +128,6 @@
 </head>
 <body>
   <h1>¡Bienvenida al Bingo Gatuno! 🐾</h1>
-  <button onclick="borrarTodasLasFotos()">🧹 Borrar todo el progreso</button>
 
   <div class="tablero" id="tablero"></div>
 
@@ -157,8 +156,9 @@
 
 
     </div>
+  
   </div>
-
+  <button onclick="borrarTodasLasFotos()">🧹 Borrar todo el progreso</button>
   <script>
     const baseComun = 'gato-base.jpeg';
 
@@ -297,8 +297,8 @@
 
   // También actualiza la imagen del modal si está abierto
   if (gatoActual) {
-    modalImagen.src = gatoActual.base;
-  }
+  modalImagen.src = baseComun;
+}
 
   alert("Todas las fotos fueron borradas. ¡Empezás de nuevo!");
 }
