@@ -197,6 +197,7 @@
   
       reader.onload = function(e) {
         base64Temporal = e.target.result;
+        console.log("Imagen cargada:", base64Temporal);
         modalImagen.src = base64Temporal;
         document.getElementById('confirmarFotoBtn').style.display = 'inline-block';
       };
@@ -210,6 +211,9 @@
   
     function confirmarFoto() {
       if (!gatoActual || !base64Temporal) return;
+  
+      console.log("Confirmando foto para:", gatoActual.nombre);
+      console.log("Base64 temporal:", base64Temporal);
   
       localStorage.setItem(`foto-${gatoActual.nombre}`, base64Temporal);
   
